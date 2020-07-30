@@ -1,5 +1,36 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  each scan in scans
+    .scan
+      div 
+        span.title Scanner
+        span.value= scan.scanner
+      div 
+        span.title Time
+        span.value= scan.time
+      div
+        span.title Result
+        .results
+          each profile in scan.result
+            .result
+              div
+                span.title SSID
+                span.value= profile.ssid
+              div
+                span.title BSSID
+                span.value= profile.bssid
+              div
+                span.title Frequency
+                span.value= profile.freq
+              div
+                span.title RSSI
+                span.value= profile.rssi
+              div
+                span.title AKM
+                .akms
+                  if(profile.akm.length !== 0)
+                    each akm in profile.akm
+                      span.value= akm
+                  else
+                      span.value NONE

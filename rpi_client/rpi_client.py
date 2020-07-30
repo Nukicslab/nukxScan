@@ -1,5 +1,6 @@
 import pywifi
 import requests
+import socket # For getting hostname
 from time import sleep
 from datetime import datetime
 
@@ -14,9 +15,9 @@ def scan_wifi(iface):
     akm_lookup_table = [
         "NONE",
         "WPA",
-        "WPAPSK",
+        "WPA_PSK",
         "WPA2",
-        "WPA2PSK",
+        "WPA2_PSK",
         "UNKNOWN"
     ]
     result=[{
@@ -45,6 +46,7 @@ while(n_iface<0 or n_iface>=len(interfaces)):
 # Begin scanning at the selected interface
 iface = interfaces[n_iface]
 print("Selected interface", iface.name())
+upload_url = 'http://10.0.200.254:3000/update/'+socket.gethostname()
 while(True):
     now = datetime.now()
     now = now.strftime("[%H:%M:%S]")
@@ -53,5 +55,7 @@ while(True):
     print("Scanning was completed. Result as follow.")
     for i in result:
         print('\t',i)
-    r = requests.post('http://localhost:3000', json=result)
+    r = requests.post(upload_url, json=result)
+    if(r.status_code == 200):
+        print("Uploading result was completed.")
     print()
