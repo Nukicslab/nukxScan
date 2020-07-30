@@ -12,6 +12,7 @@ body,html {
 
 .title{
   font-weight: 700;
+  text-decoration: underline #555;
 }
 
 .value{

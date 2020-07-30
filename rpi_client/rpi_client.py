@@ -46,7 +46,7 @@ while(n_iface<0 or n_iface>=len(interfaces)):
 # Begin scanning at the selected interface
 iface = interfaces[n_iface]
 print("Selected interface", iface.name())
-upload_url = 'http://10.0.200.254:3000/update/'+socket.gethostname()
+upload_url = 'http://172.16.0.1:3000/update/'+socket.gethostname()
 while(True):
     now = datetime.now()
     now = now.strftime("[%H:%M:%S]")
