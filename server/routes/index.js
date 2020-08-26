@@ -25,6 +25,7 @@ router.post('/update', function(req, res, next) {
 
 router.get('/', function(req,res,next){
   wifiScan.find({}, (err, scans)=>{
+    scans.reverse();
     res.render('index', {scans});
   });
 })
