@@ -4,13 +4,13 @@ const { wifiScan } = require('../db');
 var router = express.Router();
 
 /* Update data from RaspberryPi. */
-router.post('/update/:hostname', function(req, res, next) {
-  let currentTime = Date.now();
+router.post('/update', function(req, res, next) {
+  let currentTime = req.body.time;
 
   let newUpdate = new db.wifiScan({
-    scanner: req.params.hostname,
+    scanner: req.body.hostname,
     time: currentTime,
-    result: req.body
+    result: req.body.result
   });
 
   newUpdate.save(()=>{

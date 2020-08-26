@@ -1,6 +1,8 @@
 extends layout
 
 block content
+  if scans.length == 0
+    p No result yet
   each scan in scans
     .scan
       div 
@@ -9,6 +11,9 @@ block content
       div 
         span.title Time
         span.value= scan.time
+      div 
+        span.title Count
+        span.value= scan.result.length
       div
         span.title Result
         .results

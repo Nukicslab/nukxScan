@@ -1,6 +1,7 @@
 import pywifi
 import requests
 import socket # For getting hostname
+import time
 from time import sleep
 from datetime import datetime
 
@@ -21,7 +22,8 @@ def scan_wifi(iface):
         "UNKNOWN"
     ]
     result=[{
-        'ssid': i.ssid,
+        # Convert to UTF-8
+        'ssid' = i.ssid.encode().decode('unicode-escape').encode('latin1').decode('utf-8'),
         'bssid': i.bssid,
         'akm': [ akm_lookup_table[akm] for akm in i.akm],
         'freq': i.freq,
@@ -42,20 +44,36 @@ while(n_iface<0 or n_iface>=len(interfaces)):
         n_iface = int(input("Please select the interface number:"))
     except:
         pass
+n_iface = 0
 
 # Begin scanning at the selected interface
 iface = interfaces[n_iface]
 print("Selected interface", iface.name())
-upload_url = 'http://172.16.0.1:3000/update/'+socket.gethostname()
+upload_url = 'http://172.16.0.1:3000/update'
 while(True):
-    now = datetime.now()
-    now = now.strftime("[%H:%M:%S]")
-    print(now, "Begin scanning...")
+    
+    scan_time = datetime.now()
+    scan_time_str = scan_time.strftime("[%H:%M:%S]")
+
+    # Convert to Javascript timestamp
+    scan_time_timestamp = int(time.mktime(scan_time.timetuple()))
+    scan_time_timestamp *= 1000
+
+    print(scan_time_str, "Begin scanning...")
     result = scan_wifi(iface)
+    
     print("Scanning was completed. Result as follow.")
     for i in result:
         print('\t',i)
-    r = requests.post(upload_url, json=result)
+    
+    # Data the will upload to IoT server
+    upload_data = {
+        'time': scan_time_timestamp,
+        'hostname': socket.gethostname(),
+        'result': result
+    }
+    
+    r = requests.post(upload_url, json=upload_data)
     if(r.status_code == 200):
         print("Uploading result was completed.")
     print()
