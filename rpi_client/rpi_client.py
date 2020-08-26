@@ -8,7 +8,7 @@ from datetime import datetime
 # Scan the nearby access points with given interface
 def scan_wifi(iface):
     iface.scan()
-    sleep(10)
+    sleep(5)
 
     # Process the result of scanning
     result=iface.scan_results()
