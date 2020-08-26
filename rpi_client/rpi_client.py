@@ -23,7 +23,7 @@ def scan_wifi(iface):
     ]
     result=[{
         # Convert to UTF-8
-        'ssid' = i.ssid.encode().decode('unicode-escape').encode('latin1').decode('utf-8'),
+        'ssid': i.ssid.encode().decode('unicode-escape').encode('latin1').decode('utf-8'),
         'bssid': i.bssid,
         'akm': [ akm_lookup_table[akm] for akm in i.akm],
         'freq': i.freq,
