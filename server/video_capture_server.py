@@ -42,7 +42,7 @@ while True:
     cv2.imshow('Server', img)
     cv2.waitKey(1) # Must write this after imopen
 
-    serverMessage = 'Capture saved';
+    serverMessage = 'Capture received MD5: '+hash_val
     conn.sendall(serverMessage.encode())
     conn.close()
 
