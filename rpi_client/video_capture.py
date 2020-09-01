@@ -3,11 +3,12 @@
 import cv2
 import socket
 import numpy as np
+import hashlib
 
 DURATION = 1000 # Unit: ms
 DEVICE_NUM = 0
 SERVER = {
-    'HOST': '127.0.0.1',
+    'HOST': '10.0.0.1',
     'PORT': 3000
 }
 
@@ -23,9 +24,13 @@ while(True):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((SERVER['HOST'], SERVER['PORT']))
     _, encoded_img = cv2.imencode('.jpeg', frame)
-    print(encoded_img.shape)
     encoded_img = bytes(encoded_img)
     client.sendall(encoded_img)
+    
+    hash_gen = hashlib.md5()
+    hash_gen.update(encoded_img)
+    hash_val = hash_gen.hexdigest()
+    print('MD5:', hash_val)
     
     #img_bytes = np.frombuffer(encoded_img, dtype=np.uint8)
     #img_bytes = img_bytes.reshape(-1,1)

@@ -2,6 +2,7 @@
 import cv2
 import socket
 import numpy as np
+import hashlib
 SERVER = {
     'HOST': '0.0.0.0',
     'PORT': 3000
@@ -25,17 +26,24 @@ server.listen(10)
 
 while True:
     conn, addr = server.accept()
+
+    print('Received new capture')
     img_bytes = recvall(conn)
+
+    hash_gen = hashlib.md5()
+    hash_gen.update(img_bytes)
+    hash_val = hash_gen.hexdigest()
+    print('MD5:', hash_val)
 
     img_bytes = np.frombuffer(img_bytes, dtype=np.uint8)
     img_bytes = img_bytes.reshape(-1,1)
-
     img = cv2.imdecode(img_bytes, cv2.IMREAD_COLOR)
 
     cv2.imshow('Server', img)
-
-    print('Received new capture')
+    cv2.waitKey(1) # Must write this after imopen
 
     serverMessage = 'Capture saved';
     conn.sendall(serverMessage.encode())
     conn.close()
+
+cv2.destroyAllWindows()
