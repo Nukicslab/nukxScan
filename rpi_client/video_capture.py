@@ -27,6 +27,8 @@ while(True):
     encoded_img = bytes(encoded_img)
     client.sendall(encoded_img)
     
+    print('Length:', len(encoded_img), 'bytes')
+    
     hash_gen = hashlib.md5()
     hash_gen.update(encoded_img)
     hash_val = hash_gen.hexdigest()

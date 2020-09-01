@@ -30,6 +30,7 @@ while True:
     print('Received new capture')
     img_bytes = recvall(conn)
 
+    print('Length:', len(img_bytes), 'bytes')
     hash_gen = hashlib.md5()
     hash_gen.update(img_bytes)
     hash_val = hash_gen.hexdigest()
