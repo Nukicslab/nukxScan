@@ -8,7 +8,7 @@ import hashlib
 DURATION = 1000 # Unit: ms
 DEVICE_NUM = 0
 SERVER = {
-    'HOST': '10.0.0.1',
+    'HOST': '127.0.0.1',
     'PORT': 3000
 }
 
@@ -25,9 +25,15 @@ while(True):
     client.connect((SERVER['HOST'], SERVER['PORT']))
     _, encoded_img = cv2.imencode('.jpeg', frame)
     encoded_img = bytes(encoded_img)
-    client.sendall(encoded_img)
     
+    # Calculate the length of data
+    data_len = len(encoded_img)
     print('Length:', len(encoded_img), 'bytes')
+    data_len = data_len.to_bytes(4, byteorder="little")
+    print(data_len)
+    
+    # Send data length & data
+    client.sendall(data_len+encoded_img) 
     
     hash_gen = hashlib.md5()
     hash_gen.update(encoded_img)

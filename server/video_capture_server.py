@@ -3,19 +3,26 @@ import cv2
 import socket
 import numpy as np
 import hashlib
+import binascii
+
 SERVER = {
     'HOST': '0.0.0.0',
     'PORT': 3000
 }
 
-def recvall(sock):
+def recvFrame(sock):
     BUFF_SIZE = 4096 # 4 KiB
     data = b''
+    data_len = -1
     while True:
         part = sock.recv(BUFF_SIZE)
-        data += part
-        if len(part) < BUFF_SIZE:
-            # either 0 or end of data
+        if data_len == -1:
+            data_len = int.from_bytes(part[0:4], byteorder='little')
+            data += part[4:]
+        else:
+            data += part
+        if len(data) == data_len:
+            # Received whole frame
             break
     return data
 
@@ -28,7 +35,7 @@ while True:
     conn, addr = server.accept()
 
     print('Received new capture')
-    img_bytes = recvall(conn)
+    img_bytes = recvFrame(conn)
 
     print('Length:', len(img_bytes), 'bytes')
     hash_gen = hashlib.md5()
