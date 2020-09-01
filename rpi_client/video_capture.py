@@ -8,12 +8,13 @@ import hashlib
 DURATION = 1000 # Unit: ms
 DEVICE_NUM = 0
 SERVER = {
-    'HOST': '127.0.0.1',
+    'HOST': '10.0.0.1',
     'PORT': 3000
 }
 
 cap = cv2.VideoCapture(DEVICE_NUM)
 cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
 
 while(True):
     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -30,7 +31,6 @@ while(True):
     data_len = len(encoded_img)
     print('Length:', len(encoded_img), 'bytes')
     data_len = data_len.to_bytes(4, byteorder="little")
-    print(data_len)
     
     # Send data length & data
     client.sendall(data_len+encoded_img) 
