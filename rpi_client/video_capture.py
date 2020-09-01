@@ -5,7 +5,7 @@ import socket
 import numpy as np
 import hashlib
 
-DURATION = 1000 # Unit: ms
+DURATION = 33 # Unit: ms
 DEVICE_NUM = 0
 SERVER = {
     'HOST': '10.0.0.1',
@@ -15,10 +15,12 @@ SERVER = {
 cap = cv2.VideoCapture(DEVICE_NUM)
 cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
 
 while(True):
-    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-    _, frame = cap.read()
+    cap.grab()
+    _, frame = cap.retrieve()
     cv2.imshow('Capture', frame)
 
     # Upload image to server
